@@ -103,6 +103,8 @@ my_DB.insert(table4)
 my_DB.insert(table5)
 my_table1 = my_DB.search('cities')
 my_table3 = my_DB.search('players')
+
+# World cup 2010 part
 my_table4 = table3.join(table4, 'team').filter(lambda x: 'ia' in x['team']).filter(lambda x: int(x['minutes']) < 200).filter(lambda x: int(x['passes']) > 100)
 print(my_table4.select(['surname', 'team', 'position']))
 team_ranking_below_10 = table4.filter(lambda x: int(x['ranking']) < 10).aggregate(lambda x: sum(x)/len(x), 'games')
@@ -114,6 +116,17 @@ midfield_passes = table3.filter(lambda x: x['position'] == 'midfielder').aggrega
 print(f'Forward passes: {forward_passes:.3f}')
 print(f'Midfielder passes: {midfield_passes:.3f}')
 
+# Titanic part
+first_class_passenger_average_paid = table5.filter(lambda x: int(x['class']) == 1).aggregate(lambda x: sum(x)/len(x), 'fare')
+third_class_passenger_average_paid = table5.filter(lambda x: int(x['class']) == 3).aggregate(lambda x: sum(x)/len(x), 'fare')
+print(f'Average fare paid by first class passenger: {first_class_passenger_average_paid:.3f}')
+print(f'Average fare paid by third class passenger: {third_class_passenger_average_paid:.3f}')
+all_female_passengers = table5.filter(lambda x: x['gender'] == 'F').select(['survived'])
+female_passengers = table5.filter(lambda x: x['gender'] == 'F').filter(lambda x: x['survived'] == 'yes').select(['survived'])
+all_male_passengers = table5.filter(lambda x: x['gender'] == 'M').select(['survived'])
+male_passengers = table5.filter(lambda x: x['gender'] == 'M').filter(lambda x: x['survived'] == 'yes').select(['survived'])
+print(f'Survival rate of female passengers: {len(female_passengers)/len(all_female_passengers):.2f} ')
+print(f'Survival rate of male passengers: {len(male_passengers)/len(all_male_passengers):.2f} ')
 
 # print("Test filter: only filtering out cities in Italy")
 # my_table1_filtered = my_table1.filter(lambda x: x['country'] == 'Italy')
