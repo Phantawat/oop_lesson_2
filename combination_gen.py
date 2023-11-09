@@ -9,6 +9,3 @@ def gen_comb_list(list_set):
         for combine in remaining_list:
             new_set.append([i] + combine)
     return new_set
-
-
-print(gen_comb_list([[1, 2, 3], [4, 5]]))
