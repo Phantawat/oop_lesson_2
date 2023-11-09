@@ -128,46 +128,6 @@ male_passengers = table5.filter(lambda x: x['gender'] == 'M').filter(lambda x: x
 print(f'Survival rate of female passengers: {len(female_passengers)/len(all_female_passengers):.2f} ')
 print(f'Survival rate of male passengers: {len(male_passengers)/len(all_male_passengers):.2f} ')
 
-# print("Test filter: only filtering out cities in Italy")
-# my_table1_filtered = my_table1.filter(lambda x: x['country'] == 'Italy')
-# print(my_table1_filtered)
-# print()
-#
-# print("Test select: only displaying two fields, city and latitude, for cities in Italy")
-# my_table1_selected = my_table1_filtered.select(['city', 'latitude'])
-# print(my_table1_selected)
-# print()
-#
-# print("Calculting the average temperature without using aggregate for cities in Italy")
-# temps = []
-# for item in my_table1_filtered.table:
-#     temps.append(float(item['temperature']))
-# print(sum(temps)/len(temps))
-# print()
-#
-# print("Calculting the average temperature using aggregate for cities in Italy")
-# print(my_table1_filtered.aggregate(lambda x: sum(x)/len(x), 'temperature'))
-# print()
-#
-# print("Test join: finding cities in non-EU countries whose temperatures are below 5.0")
-# my_table2 = my_DB.search('countries')
-# my_table3 = my_table1.join(my_table2, 'country')
-# my_table3_filtered = my_table3.filter(lambda x: x['EU'] == 'no').filter(lambda x: float(x['temperature']) < 5.0)
-# print(my_table3_filtered.table)
-# print()
-# print("Selecting just three fields, city, country, and temperature")
-# print(my_table3_filtered.select(['city', 'country', 'temperature']))
-# print()
-#
-# print("Print the min and max temperatures for cities in EU that do not have coastlines")
-# my_table3_filtered = my_table3.filter(lambda x: x['EU'] == 'yes').filter(lambda x: x['coastline'] == 'no')
-# print("Min temp:", my_table3_filtered.aggregate(lambda x: min(x), 'temperature'))
-# print("Max temp:", my_table3_filtered.aggregate(lambda x: max(x), 'temperature'))
-# print()
-#
-# print("Print the min and max latitude for cities in every country")
-# for item in my_table2.table:
-#     my_table1_filtered = my_table1.filter(lambda x: x['country'] == item['country'])
-#     if len(my_table1_filtered.table) >= 1:
-#         print(item['country'], my_table1_filtered.aggregate(lambda x: min(x), 'latitude'), my_table1_filtered.aggregate(lambda x: max(x), 'latitude'))
-# print()
+# Find the total number of male passengers embarked at Southampton
+Southampton_passengers = table5.filter(lambda x: x['gender'] == 'M').filter(lambda x: x['embarked'] == 'Southampton').select(['embarked'])
+print(f'The total number of male passengers embarked at Southampton are {len(Southampton_passengers)} passengers.')
