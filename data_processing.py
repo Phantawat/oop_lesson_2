@@ -1,4 +1,5 @@
 import csv, os
+import combination_gen
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -89,6 +90,11 @@ class Table:
                 temps.append(item1[aggregation_key])
         return function(temps)
 
+    def pivot_table(self, keys_to_pivot_list, keys_to_aggreagte_list, aggregate_func_list):
+        unique_values_list = []
+        pass
+
+
     def select(self, attributes_list):
         temps = []
         for item1 in self.table:
@@ -104,82 +110,9 @@ class Table:
 
 table1 = Table('cities', cities)
 table2 = Table('countries', countries)
-table3 = Table('players', Players)
-table4 = Table('teams', Teams)
-table5 = Table('titanic', titanic)
 my_DB = DB()
-my_DB.insert(table1)
-my_DB.insert(table2)
-my_DB.insert(table3)
+table4 = Table('titanic', titanic)
 my_DB.insert(table4)
-my_DB.insert(table5)
-my_table1 = my_DB.search('cities')
-my_table3 = my_DB.search('players')
-
-# World cup 2010 part
-my_table4 = table3.join(table4, 'team').filter(lambda x: 'ia' in x['team']).filter(lambda x: int(x['minutes']) < 200).filter(lambda x: int(x['passes']) > 100)
-print(my_table4.select(['surname', 'team', 'position']))
-team_ranking_below_10 = table4.filter(lambda x: int(x['ranking']) < 10).aggregate(lambda x: sum(x)/len(x), 'games')
-team_ranking_more_than_10 = table4.filter(lambda x: int(x['ranking']) >= 10).aggregate(lambda x: sum(x)/len(x), 'games')
-print(f'Average games played for teams ranking below 10: {team_ranking_below_10:.3f}')
-print(f'Average games played for teams ranking above 10: {team_ranking_more_than_10:.3f}')
-forward_passes = table3.filter(lambda x: x['position'] == 'forward').aggregate(lambda x: sum(x)/len(x), 'passes')
-midfield_passes = table3.filter(lambda x: x['position'] == 'midfielder').aggregate(lambda x: sum(x)/len(x), 'passes')
-print(f'Forward passes: {forward_passes:.3f}')
-print(f'Midfielder passes: {midfield_passes:.3f}')
-
-# Titanic part
-first_class_passenger_average_paid = table5.filter(lambda x: int(x['class']) == 1).aggregate(lambda x: sum(x)/len(x), 'fare')
-third_class_passenger_average_paid = table5.filter(lambda x: int(x['class']) == 3).aggregate(lambda x: sum(x)/len(x), 'fare')
-print(f'Average fare paid by first class passenger: {first_class_passenger_average_paid:.3f}')
-print(f'Average fare paid by third class passenger: {third_class_passenger_average_paid:.3f}')
-all_female_passengers = table5.filter(lambda x: x['gender'] == 'F').select(['survived'])
-female_passengers = table5.filter(lambda x: x['gender'] == 'F').filter(lambda x: x['survived'] == 'yes').select(['survived'])
-all_male_passengers = table5.filter(lambda x: x['gender'] == 'M').select(['survived'])
-male_passengers = table5.filter(lambda x: x['gender'] == 'M').filter(lambda x: x['survived'] == 'yes').select(['survived'])
-print(f'Survival rate of female passengers: {len(female_passengers)/len(all_female_passengers):.2f} ')
-print(f'Survival rate of male passengers: {len(male_passengers)/len(all_male_passengers):.2f} ')
-
-# print("Test filter: only filtering out cities in Italy")
-# my_table1_filtered = my_table1.filter(lambda x: x['country'] == 'Italy')
-# print(my_table1_filtered)
-# print()
-#
-# print("Test select: only displaying two fields, city and latitude, for cities in Italy")
-# my_table1_selected = my_table1_filtered.select(['city', 'latitude'])
-# print(my_table1_selected)
-# print()
-#
-# print("Calculting the average temperature without using aggregate for cities in Italy")
-# temps = []
-# for item in my_table1_filtered.table:
-#     temps.append(float(item['temperature']))
-# print(sum(temps)/len(temps))
-# print()
-#
-# print("Calculting the average temperature using aggregate for cities in Italy")
-# print(my_table1_filtered.aggregate(lambda x: sum(x)/len(x), 'temperature'))
-# print()
-#
-# print("Test join: finding cities in non-EU countries whose temperatures are below 5.0")
-# my_table2 = my_DB.search('countries')
-# my_table3 = my_table1.join(my_table2, 'country')
-# my_table3_filtered = my_table3.filter(lambda x: x['EU'] == 'no').filter(lambda x: float(x['temperature']) < 5.0)
-# print(my_table3_filtered.table)
-# print()
-# print("Selecting just three fields, city, country, and temperature")
-# print(my_table3_filtered.select(['city', 'country', 'temperature']))
-# print()
-#
-# print("Print the min and max temperatures for cities in EU that do not have coastlines")
-# my_table3_filtered = my_table3.filter(lambda x: x['EU'] == 'yes').filter(lambda x: x['coastline'] == 'no')
-# print("Min temp:", my_table3_filtered.aggregate(lambda x: min(x), 'temperature'))
-# print("Max temp:", my_table3_filtered.aggregate(lambda x: max(x), 'temperature'))
-# print()
-#
-# print("Print the min and max latitude for cities in every country")
-# for item in my_table2.table:
-#     my_table1_filtered = my_table1.filter(lambda x: x['country'] == item['country'])
-#     if len(my_table1_filtered.table) >= 1:
-#         print(item['country'], my_table1_filtered.aggregate(lambda x: min(x), 'latitude'), my_table1_filtered.aggregate(lambda x: max(x), 'latitude'))
-# print()
+my_table4 = my_DB.search('titanic')
+my_pivot = my_table4.pivot_table(['embarked', 'gender', 'class'], ['fare', 'fare', 'fare', 'last'], [lambda x: min(x), lambda x: max(x), lambda x: sum(x)/len(x), lambda x: len(x)])
+print(my_pivot)
